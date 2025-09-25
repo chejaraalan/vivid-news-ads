@@ -1,8 +1,11 @@
 import NewsCard from "./NewsCard";
 import AdBanner from "./AdBanner";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { ChevronUp, Loader2 } from "lucide-react";
+import { Button } from "./ui/button";
 
-// Mock news data - will be replaced with live API data
-const mockNews = [
+// Mock news data for different days
+const getTodayNews = () => [
   {
     id: 1,
     title: "Global Climate Summit Reaches Historic Agreement on Carbon Reduction",
@@ -13,7 +16,8 @@ const mockNews = [
     category: "International",
     likes: 1247,
     dislikes: 23,
-    isFeatured: true
+    isFeatured: true,
+    date: "today"
   },
   {
     id: 2,
@@ -24,7 +28,8 @@ const mockNews = [
     publishedAt: "4 hours ago",
     category: "Breaking",
     likes: 892,
-    dislikes: 12
+    dislikes: 12,
+    date: "today"
   },
   {
     id: 3,
@@ -35,7 +40,8 @@ const mockNews = [
     publishedAt: "6 hours ago",
     category: "National",
     likes: 634,
-    dislikes: 45
+    dislikes: 45,
+    date: "today"
   },
   {
     id: 4,
@@ -46,33 +52,136 @@ const mockNews = [
     publishedAt: "8 hours ago",
     category: "Sports",
     likes: 1156,
-    dislikes: 8
+    dislikes: 8,
+    date: "today"
+  }
+];
+
+const getYesterdayNews = () => [
+  {
+    id: 11,
+    title: "International Trade Agreements Reshape Global Markets",
+    summary: "New bilateral agreements between major economies are set to transform international commerce and create new opportunities for emerging markets.",
+    imageUrl: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400&h=300&fit=crop",
+    source: "World Economic Forum",
+    publishedAt: "1 day ago",
+    category: "International",
+    likes: 523,
+    dislikes: 17,
+    date: "yesterday"
   },
   {
-    id: 5,
-    title: "Healthcare Innovation: New Treatment Shows Promise",
-    summary: "Breakthrough medical research offers hope for millions suffering from chronic conditions, with clinical trials showing remarkable success rates.",
-    imageUrl: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=300&fit=crop",
-    source: "Health Today",
-    publishedAt: "10 hours ago",
+    id: 12,
+    title: "Revolutionary AI System Transforms Medical Diagnostics",
+    summary: "Healthcare institutions worldwide adopt groundbreaking artificial intelligence technology that dramatically improves disease detection accuracy.",
+    imageUrl: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=400&h=300&fit=crop",
+    source: "Medical Innovation Today",
+    publishedAt: "1 day ago",
     category: "Health",
-    likes: 743,
-    dislikes: 19
+    likes: 891,
+    dislikes: 22,
+    date: "yesterday"
   },
   {
-    id: 6,
-    title: "Entertainment Industry Embraces Sustainable Practices",
-    summary: "Major studios and production companies commit to carbon-neutral filming and environmentally conscious content creation processes.",
-    imageUrl: "https://images.unsplash.com/photo-1489599312549-05b5409d3dc6?w=400&h=300&fit=crop",
-    source: "Entertainment Weekly",
-    publishedAt: "12 hours ago",
-    category: "Entertainment",
-    likes: 456,
-    dislikes: 31
+    id: 13,
+    title: "Space Exploration Mission Discovers Potential Signs of Life",
+    summary: "NASA's latest Mars rover expedition uncovers compelling evidence that could indicate past or present microbial life on the Red Planet.",
+    imageUrl: "https://images.unsplash.com/photo-1541186933-ef5d8ed016c2?w=400&h=300&fit=crop",
+    source: "Space Daily",
+    publishedAt: "1 day ago",
+    category: "Science",
+    likes: 1234,
+    dislikes: 8,
+    date: "yesterday"
+  },
+  {
+    id: 14,
+    title: "Renewable Energy Milestone: Solar Power Reaches Cost Parity",
+    summary: "Solar energy costs drop below traditional fossil fuels in major markets, accelerating the global transition to clean energy sources.",
+    imageUrl: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&h=300&fit=crop",
+    source: "Green Energy Report",
+    publishedAt: "1 day ago",
+    category: "Environment",
+    likes: 678,
+    dislikes: 15,
+    date: "yesterday"
+  },
+  {
+    id: 15,
+    title: "Cultural Festival Brings Together Nations in Celebration",
+    summary: "International cultural exchange program showcases diverse traditions and strengthens diplomatic ties between participating countries.",
+    imageUrl: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=400&h=300&fit=crop",
+    source: "Cultural Times",
+    publishedAt: "1 day ago",
+    category: "Culture",
+    likes: 445,
+    dislikes: 12,
+    date: "yesterday"
   }
 ];
 
 export default function NewsGrid() {
+  const [articles, setArticles] = useState(getTodayNews());
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const observerTarget = useRef(null);
+
+  // Simulate loading more news (yesterday's news)
+  const loadMoreNews = useCallback(async () => {
+    if (loading || !hasMore) return;
+    
+    setLoading(true);
+    
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    if (currentPage === 0) {
+      // Load yesterday's news
+      const yesterdayNews = getYesterdayNews();
+      setArticles(prev => [...prev, ...yesterdayNews]);
+      setCurrentPage(1);
+    } else {
+      // No more news available
+      setHasMore(false);
+    }
+    
+    setLoading(false);
+  }, [loading, hasMore, currentPage]);
+
+  // Intersection Observer for infinite scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMoreNews();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => observer.disconnect();
+  }, [loadMoreNews]);
+
+  // Scroll position detection for back-to-top button
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 600);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <section className="container mx-auto px-4 py-12">
       <div className="flex gap-8">
@@ -85,7 +194,7 @@ export default function NewsGrid() {
 
           {/* Featured article */}
           <div className="mb-8">
-            <NewsCard {...mockNews[0]} />
+            <NewsCard {...articles[0]} />
           </div>
 
           {/* Inline ad */}
@@ -99,13 +208,17 @@ export default function NewsGrid() {
             />
           </div>
 
-          {/* News grid */}
+          {/* News grid with infinite scroll */}
           <div className="grid md:grid-cols-2 gap-6">
-            {mockNews.slice(1).map((article, index) => (
-              <div key={article.id}>
+            {articles.slice(1).map((article, index) => (
+              <div 
+                key={article.id} 
+                className="animate-fade-in"
+                style={{ animationDelay: `${(index % 4) * 0.1}s` }}
+              >
                 <NewsCard {...article} />
-                {/* Insert ad after every 3 articles */}
-                {(index + 2) % 3 === 0 && (
+                {/* Insert ad after every 6 articles */}
+                {(index + 2) % 6 === 0 && (
                   <div className="mt-6">
                     <AdBanner
                       type="video"
@@ -120,12 +233,25 @@ export default function NewsGrid() {
             ))}
           </div>
 
-          {/* Load more button */}
-          <div className="text-center mt-12">
-            <button className="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
-              Load More Articles
-            </button>
-          </div>
+          {/* Loading indicator */}
+          {loading && (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin mr-2" />
+              <span className="text-muted-foreground">Loading older news...</span>
+            </div>
+          )}
+
+          {/* End of content message */}
+          {!hasMore && !loading && (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">
+                You've reached the end. No more news from the past.
+              </p>
+            </div>
+          )}
+
+          {/* Invisible element for intersection observer */}
+          <div ref={observerTarget} className="h-10" />
         </div>
 
         {/* Sidebar */}
@@ -134,7 +260,7 @@ export default function NewsGrid() {
           <div className="bg-card border border-card-border rounded-lg p-6">
             <h3 className="font-bold text-lg mb-4 news-headline">Trending Now</h3>
             <div className="space-y-4">
-              {mockNews.slice(0, 4).map((article, index) => (
+              {articles.slice(0, 4).map((article, index) => (
                 <div key={article.id} className="flex gap-3 p-3 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors">
                   <span className="text-primary font-bold text-sm">{index + 1}</span>
                   <div>
@@ -143,6 +269,23 @@ export default function NewsGrid() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Timeline indicator */}
+          <div className="bg-gradient-card border border-card-border rounded-lg p-6">
+            <h3 className="font-bold text-lg mb-3 news-headline">Timeline</h3>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-primary"></div>
+                <span>Today's News</span>
+              </div>
+              {currentPage >= 1 && (
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-muted-foreground"></div>
+                  <span className="text-muted-foreground">Yesterday's News</span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -171,17 +314,19 @@ export default function NewsGrid() {
               </button>
             </div>
           </div>
-
-          {/* Another sidebar ad */}
-          <AdBanner
-            type="video"
-            src="/sample-video-ad.mp4"
-            title="Explore New Technologies"
-            allowSkip={false}
-            position="sidebar"
-          />
         </aside>
       </div>
+
+      {/* Back to top button */}
+      {showBackToTop && (
+        <Button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 rounded-full w-12 h-12 shadow-lg animate-fade-in z-50"
+          size="icon"
+        >
+          <ChevronUp className="h-5 w-5" />
+        </Button>
+      )}
     </section>
   );
 }

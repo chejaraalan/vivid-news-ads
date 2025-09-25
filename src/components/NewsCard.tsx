@@ -1,5 +1,6 @@
 import { Clock, ThumbsUp, ThumbsDown, Share2, Bookmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 interface NewsCardProps {
   title: string;
@@ -28,6 +29,8 @@ export default function NewsCard({
   isDisliked = false,
   isFeatured = false
 }: NewsCardProps) {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   const handleLike = () => {
     // Will be connected to backend
     console.log("Like clicked");
@@ -41,10 +44,19 @@ export default function NewsCard({
   return (
     <article className={`news-card ${isFeatured ? 'news-card-featured' : ''} group cursor-pointer`}>
       <div className="relative overflow-hidden">
+        {!imageLoaded && (
+          <div className="w-full h-48 bg-muted animate-pulse flex items-center justify-center">
+            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )}
         <img 
           src={imageUrl} 
           alt={title}
-          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+          loading="lazy"
+          onLoad={() => setImageLoaded(true)}
+          className={`w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300 ${
+            imageLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
         />
         <div className="absolute top-3 left-3">
           <span className={`news-tag ${category === 'Breaking' ? 'news-tag-alert' : ''}`}>
