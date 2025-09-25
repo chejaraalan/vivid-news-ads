@@ -2,95 +2,88 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Modern News Website Design System */
 
 @layer base {
   :root {
+    /* News Website Color Palette */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
+    --foreground: 0 0% 20%;
+    
+    /* News brand colors */
+    --news-primary: 212 100% 55%; /* #1a73e8 */
+    --news-primary-foreground: 0 0% 100%;
+    
+    --news-headline: 0 0% 20%; /* #333333 */
+    --news-alert: 356 75% 48%; /* #C62828 */
+    --news-tag: 45 100% 50%; /* #FFB300 */
+    --news-menu: 200 24% 20%; /* #263238 */
+    
+    /* Content areas */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 0 0% 20%;
+    --card-border: 0 0% 92%;
+    
+    /* Interactive elements */
+    --primary: 212 100% 55%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 210 17% 95%;
+    --secondary-foreground: 0 0% 20%;
+    
+    --muted: 210 17% 96%;
+    --muted-foreground: 215 14% 50%;
+    
+    --accent: 45 100% 50%;
+    --accent-foreground: 0 0% 20%;
+    
+    --destructive: 356 75% 48%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 0 0% 92%;
+    --input: 0 0% 96%;
+    --ring: 212 100% 55%;
+    
+    /* News-specific gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(212 100% 55%), hsl(212 85% 65%));
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%), hsl(0 0% 98%));
+    --gradient-accent: linear-gradient(135deg, hsl(45 100% 50%), hsl(45 85% 60%));
+    
+    /* Shadows */
+    --shadow-card: 0 4px 12px hsl(0 0% 0% / 0.1);
+    --shadow-hover: 0 8px 25px hsl(0 0% 0% / 0.15);
+    --shadow-accent: 0 4px 20px hsl(212 100% 55% / 0.3);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --radius: 0.75rem;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: 200 24% 12%;
+    --foreground: 0 0% 95%;
+    
+    --news-primary: 212 90% 65%;
+    --news-headline: 0 0% 95%;
+    --news-alert: 356 65% 55%;
+    --news-tag: 45 85% 60%;
+    --news-menu: 200 24% 15%;
+    
+    --card: 200 24% 15%;
+    --card-foreground: 0 0% 95%;
+    --card-border: 200 15% 25%;
+    
+    --primary: 212 90% 65%;
+    --secondary: 200 15% 20%;
+    --muted: 200 15% 18%;
+    --accent: 45 85% 60%;
+    --destructive: 356 65% 55%;
+    --border: 200 15% 25%;
+    --input: 200 15% 20%;
+    --ring: 212 90% 65%;
   }
 }
 
@@ -100,6 +93,64 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  
+  /* News Typography */
+  .news-headline {
+    @apply text-news-headline font-bold leading-tight;
+  }
+  
+  .news-subheading {
+    @apply text-news-headline/80 font-semibold;
+  }
+  
+  .news-body {
+    @apply text-foreground/90 leading-relaxed;
+  }
+  
+  .news-meta {
+    @apply text-muted-foreground text-sm;
+  }
+}
+
+@layer components {
+  /* News Card Components */
+  .news-card {
+    @apply bg-card border border-card-border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300;
+  }
+  
+  .news-card-featured {
+    @apply bg-gradient-to-br from-card to-muted border-0 shadow-lg hover:shadow-xl;
+  }
+  
+  .news-tag {
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-accent/10 text-accent border border-accent/20;
+  }
+  
+  .news-tag-alert {
+    @apply bg-destructive/10 text-destructive border-destructive/20;
+  }
+  
+  /* Interactive Elements */
+  .news-reaction-btn {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105;
+  }
+  
+  .news-reaction-like {
+    @apply bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200;
+  }
+  
+  .news-reaction-dislike {
+    @apply bg-red-50 text-red-700 hover:bg-red-100 border border-red-200;
+  }
+  
+  /* Ad Containers */
+  .ad-banner {
+    @apply bg-muted/50 border border-dashed border-border rounded-lg p-4 text-center;
+  }
+  
+  .ad-sidebar {
+    @apply bg-card border border-card-border rounded-lg p-4 shadow-sm;
   }
 }
