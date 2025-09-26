@@ -111,6 +111,9 @@ export default function Footer() {
             <a href="#" className="text-white/60 hover:text-white text-sm transition-colors">
               Cookie Policy
             </a>
+            <a href="#" className="bg-news-tag text-news-menu px-3 py-1 rounded text-sm font-medium hover:bg-news-tag/90 transition-colors" id="adds">
+              Team Login
+            </a>
           </div>
         </div>
       </div>
